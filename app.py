@@ -1,6 +1,6 @@
 """
 Gaming Cafe Analytics Dashboard - COMPLETE PREMIUM VERSION
-All Features Working + Premium Aesthetic UI
+All Features Working + Premium Aesthetic UI - SYNTAX ERROR FIXED
 """
 
 import streamlit as st
@@ -37,7 +37,7 @@ warnings.filterwarnings('ignore')
 
 st.set_page_config(page_title="Gaming Cafe Analytics", page_icon="🎮", layout="wide", initial_sidebar_state="expanded")
 
-# PREMIUM CSS - COMPLETE & WORKING IN BOTH MODES
+# PREMIUM CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -477,7 +477,7 @@ if df is not None:
                 fig.update_layout(height=400)
                 st.plotly_chart(fig, use_container_width=True)
     
-    # TAB 2: CLASSIFICATION - FULLY WORKING
+    # TAB 2: CLASSIFICATION
     with tab2:
         st.markdown('<div class="section-header">🎯 Classification Analysis</div>', unsafe_allow_html=True)
         with st.sidebar:
@@ -575,7 +575,7 @@ if df is not None:
         else:
             st.info("Select at least one model from sidebar.")
     
-    # TAB 3: CLUSTERING - FULLY WORKING
+    # TAB 3: CLUSTERING - FIXED STRING ESCAPING
     with tab3:
         st.markdown('<div class="section-header">🔍 Customer Clustering</div>', unsafe_allow_html=True)
         with st.sidebar:
@@ -630,22 +630,39 @@ if df is not None:
                     for p in personas:
                         p['size_pct'] = (cluster_sizes[p['cluster']] / len(df_processed)) * 100 if p['cluster'] in cluster_sizes.index else 0
                     
+                    # FIXED: Proper string construction without f-string quote escaping
                     for i in range(0, len(personas), 2):
                         col1, col2 = st.columns(2)
                         with col1:
                             if i < len(personas):
                                 p = personas[i]
-                                st.markdown(f'<div class="persona-card"><div class="persona-icon">{p["icon"]}</div><div class="persona-name">{p["name"]}</div><div class="persona-subtitle">{p["subtitle"]} ({p["size_pct"]:.1f}%)</div>{"".join([f\'<div class="persona-stat">{s}</div>\' for s in p["stats"]])}<div class="persona-strategy">{p["strategy"]}</div></div>', unsafe_allow_html=True)
+                                stats_html = ''.join([f'<div class="persona-stat">{s}</div>' for s in p['stats']])
+                                card_html = f'''<div class="persona-card">
+                                    <div class="persona-icon">{p["icon"]}</div>
+                                    <div class="persona-name">{p["name"]}</div>
+                                    <div class="persona-subtitle">{p["subtitle"]} ({p["size_pct"]:.1f}%)</div>
+                                    {stats_html}
+                                    <div class="persona-strategy">{p["strategy"]}</div>
+                                </div>'''
+                                st.markdown(card_html, unsafe_allow_html=True)
                         with col2:
                             if i + 1 < len(personas):
                                 p = personas[i + 1]
-                                st.markdown(f'<div class="persona-card"><div class="persona-icon">{p["icon"]}</div><div class="persona-name">{p["name"]}</div><div class="persona-subtitle">{p["subtitle"]} ({p["size_pct"]:.1f}%)</div>{"".join([f\'<div class="persona-stat">{s}</div>\' for s in p["stats"]])}<div class="persona-strategy">{p["strategy"]}</div></div>', unsafe_allow_html=True)
+                                stats_html = ''.join([f'<div class="persona-stat">{s}</div>' for s in p['stats']])
+                                card_html = f'''<div class="persona-card">
+                                    <div class="persona-icon">{p["icon"]}</div>
+                                    <div class="persona-name">{p["name"]}</div>
+                                    <div class="persona-subtitle">{p["subtitle"]} ({p["size_pct"]:.1f}%)</div>
+                                    {stats_html}
+                                    <div class="persona-strategy">{p["strategy"]}</div>
+                                </div>'''
+                                st.markdown(card_html, unsafe_allow_html=True)
                 
                 st.download_button("📥 Download Results", df_processed.to_csv(index=False), "clustering_results.csv", "text/csv")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
     
-    # TAB 4: ASSOCIATION RULES - FULLY WORKING
+    # TAB 4: ASSOCIATION RULES
     with tab4:
         st.markdown('<div class="section-header">🔗 Association Rules</div>', unsafe_allow_html=True)
         with st.sidebar:
@@ -701,7 +718,7 @@ if df is not None:
             except Exception as e:
                 st.error(f"Error: {str(e)}")
     
-    # TAB 5: REGRESSION - FULLY WORKING
+    # TAB 5: REGRESSION
     with tab5:
         st.markdown('<div class="section-header">💰 Regression Analysis</div>', unsafe_allow_html=True)
         with st.sidebar:
@@ -779,7 +796,7 @@ if df is not None:
             except Exception as e:
                 st.error(f"Error: {str(e)}")
     
-    # TAB 6: DYNAMIC PRICING - FULLY WORKING
+    # TAB 6: DYNAMIC PRICING
     with tab6:
         st.markdown('<div class="section-header">🎛️ Dynamic Pricing</div>', unsafe_allow_html=True)
         st.markdown("### 🎮 Pricing Simulator")
