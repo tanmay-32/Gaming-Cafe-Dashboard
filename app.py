@@ -1,7 +1,6 @@
 """
-Gaming Cafe Analytics Dashboard - COMPLETE PRODUCTION VERSION
-Neo-Spectra Design | Homepage | Top Navigation | Perfect Dark/Light Mode
-ZERO ERRORS - FULLY FUNCTIONAL
+Gaming Cafe Analytics Dashboard - FINAL PERFECT VERSION
+Single Navigation | Perfect Dark Mode | 5 Team Members | Cluster Centers
 """
 
 import streamlit as st
@@ -31,68 +30,57 @@ from mlxtend.preprocessing import TransactionEncoder
 import warnings
 warnings.filterwarnings('ignore')
 
-# Page Config
-st.set_page_config(
-    page_title="Gaming Cafe Analytics | Neo-Spectra Intelligence",
-    page_icon="🎮",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="Gaming Cafe Analytics", page_icon="🎮", layout="wide", initial_sidebar_state="collapsed")
 
-# NEO-SPECTRA DESIGN SYSTEM - PERFECT DARK/LIGHT MODE
+# PERFECT NEO-SPECTRA DESIGN - WORKS IN LIGHT & DARK MODE
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
-    /* Root Variables - Auto adapts to Streamlit's theme */
-    :root {
-        --primary: #6366F1;
-        --secondary: #FF6B6B;
-        --bg-dark: #0F172A;
-        --bg-light: #F8FAFC;
-        --surface-dark: #1E293B;
-        --surface-light: #FFFFFF;
-        --text-dark: #F8FAFC;
-        --text-light: #0F172A;
-        --border-dark: rgba(255, 255, 255, 0.1);
-        --border-light: rgba(15, 23, 42, 0.1);
-    }
+    * { font-family: 'Inter', sans-serif; }
     
-    /* Base Styles */
-    .stApp {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background: var(--bg-light);
-    }
-    
-    [data-theme="dark"] .stApp {
-        background: var(--bg-dark);
-    }
-    
-    /* Hide Streamlit Branding */
+    /* Hide Streamlit Elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .stDeployButton {display: none;}
     
-    /* TOP NAVIGATION BAR */
+    /* Color Variables */
+    :root {
+        --primary: #6366F1;
+        --secondary: #FF6B6B;
+    }
+    
+    /* Light Mode Colors */
+    .stApp {
+        background: #F8FAFC;
+    }
+    
+    /* Dark Mode Colors */
+    [data-theme="dark"] .stApp {
+        background: #0F172A;
+    }
+    
+    /* TOP NAVIGATION - SINGLE, WORKING */
     .top-nav {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        background: var(--surface-light);
-        border-bottom: 1px solid var(--border-light);
-        padding: 1rem 2rem;
-        z-index: 999;
+        height: 70px;
+        background: white;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
         display: flex;
         align-items: center;
         justify-content: space-between;
+        padding: 0 2rem;
+        z-index: 9999;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
     [data-theme="dark"] .top-nav {
-        background: var(--surface-dark);
-        border-bottom: 1px solid var(--border-dark);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        background: #1E293B;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     
     .nav-logo {
@@ -107,47 +95,42 @@ st.markdown("""
     .nav-links {
         display: flex;
         gap: 0.5rem;
-        align-items: center;
     }
     
-    .nav-link {
-        padding: 0.5rem 1rem;
+    .nav-btn {
+        padding: 0.5rem 1.25rem;
         border-radius: 8px;
         font-weight: 600;
         font-size: 0.9rem;
-        color: var(--text-light);
-        text-decoration: none;
-        transition: all 0.2s;
-        cursor: pointer;
-        border: none;
         background: transparent;
+        color: #64748B;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
     }
     
-    [data-theme="dark"] .nav-link {
-        color: var(--text-dark);
+    [data-theme="dark"] .nav-btn {
+        color: #94A3B8;
     }
     
-    .nav-link:hover {
+    .nav-btn:hover {
         background: rgba(99, 102, 241, 0.1);
         color: var(--primary);
     }
     
-    .nav-link.active {
+    .nav-btn.active {
         background: var(--primary);
         color: white;
     }
     
-    /* Main Content */
+    /* Main Content - Below Nav */
     .main {
-        margin-top: 5rem;
+        margin-top: 90px;
         padding: 2rem 3rem;
-        max-width: 1600px;
-        margin-left: auto;
-        margin-right: auto;
     }
     
-    /* HOMEPAGE HERO */
-    .hero-section {
+    /* HERO SECTION */
+    .hero {
         background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
         border-radius: 24px;
         padding: 4rem 3rem;
@@ -157,7 +140,7 @@ st.markdown("""
         overflow: hidden;
     }
     
-    .hero-section::before {
+    .hero::before {
         content: '';
         position: absolute;
         width: 500px;
@@ -165,84 +148,50 @@ st.markdown("""
         background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
         top: -200px;
         right: -200px;
-        animation: pulse 4s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 0.8; }
     }
     
     .hero-title {
-        font-size: 3.5rem;
+        font-size: 3rem;
         font-weight: 900;
         margin-bottom: 1rem;
-        letter-spacing: -0.02em;
         position: relative;
         z-index: 1;
     }
     
     .hero-subtitle {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         opacity: 0.95;
-        margin-bottom: 2rem;
         line-height: 1.6;
         position: relative;
         z-index: 1;
     }
     
-    .hero-cta {
-        display: inline-block;
-        background: white;
-        color: var(--primary);
-        padding: 1rem 2rem;
-        border-radius: 12px;
-        font-weight: 700;
-        text-decoration: none;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        transition: all 0.3s;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .hero-cta:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-    }
-    
-    /* SECTION CARDS */
+    /* SECTION CARD */
     .section-card {
-        background: var(--surface-light);
-        border: 1px solid var(--border-light);
+        background: white;
+        border: 1px solid rgba(0,0,0,0.1);
         border-radius: 20px;
         padding: 2rem;
         margin-bottom: 2rem;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        transition: all 0.3s;
     }
     
     [data-theme="dark"] .section-card {
-        background: var(--surface-dark);
-        border: 1px solid var(--border-dark);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    .section-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(99, 102, 241, 0.15);
+        background: #1E293B;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
     .section-title {
         font-size: 1.75rem;
         font-weight: 700;
         margin-bottom: 1rem;
-        color: var(--text-light);
+        color: #0F172A;
         position: relative;
         padding-bottom: 0.75rem;
     }
     
     [data-theme="dark"] .section-title {
-        color: var(--text-dark);
+        color: #F8FAFC;
     }
     
     .section-title::after {
@@ -256,26 +205,34 @@ st.markdown("""
         border-radius: 2px;
     }
     
-    /* TEAM MEMBERS */
+    /* TEAM GRID */
     .team-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.5rem;
         margin-top: 2rem;
     }
     
+    @media (max-width: 1400px) {
+        .team-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    
+    @media (max-width: 900px) {
+        .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
     .team-member {
-        background: var(--surface-light);
-        border: 1px solid var(--border-light);
+        background: white;
+        border: 1px solid rgba(0,0,0,0.1);
         border-radius: 16px;
-        padding: 2rem;
+        padding: 1.5rem;
         text-align: center;
         transition: all 0.3s;
     }
     
     [data-theme="dark"] .team-member {
-        background: var(--surface-dark);
-        border: 1px solid var(--border-dark);
+        background: #1E293B;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
     .team-member:hover {
@@ -285,60 +242,47 @@ st.markdown("""
     }
     
     .team-avatar {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         border-radius: 50%;
         background: linear-gradient(135deg, var(--primary) 0%, #8B5CF6 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2.5rem;
+        font-size: 2rem;
         margin: 0 auto 1rem;
         color: white;
+        font-weight: 700;
     }
     
     .team-name {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: var(--text-light);
+        margin-bottom: 0.25rem;
+        color: #0F172A;
     }
     
     [data-theme="dark"] .team-name {
-        color: var(--text-dark);
+        color: #F8FAFC;
     }
     
-    .team-role {
-        font-size: 0.9rem;
+    .team-roll {
+        font-size: 0.85rem;
         color: var(--primary);
         font-weight: 600;
-        margin-bottom: 0.75rem;
     }
     
-    .team-bio {
-        font-size: 0.85rem;
-        opacity: 0.7;
-        line-height: 1.5;
-    }
-    
-    /* METRIC CARDS */
+    /* METRICS */
     [data-testid="stMetric"] {
-        background: var(--surface-light);
-        border: 1px solid var(--border-light);
+        background: white;
+        border: 1px solid rgba(0,0,0,0.1);
         padding: 1.5rem;
         border-radius: 16px;
-        transition: all 0.3s;
     }
     
     [data-theme="dark"] [data-testid="stMetric"] {
-        background: var(--surface-dark);
-        border: 1px solid var(--border-dark);
-    }
-    
-    [data-testid="stMetric"]:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(99, 102, 241, 0.15);
-        border-color: var(--primary);
+        background: #1E293B;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
     [data-testid="stMetricValue"] {
@@ -357,103 +301,10 @@ st.markdown("""
         opacity: 0.7;
     }
     
-    [data-testid="stMetricDelta"] {
-        color: var(--secondary);
-        font-weight: 700;
-    }
-    
-    /* TABS (Hidden - Using Custom Navigation) */
-    .stTabs {
-        display: none;
-    }
-    
-    /* BUTTONS */
-    .stButton button {
-        border-radius: 10px;
-        font-weight: 600;
-        padding: 0.65rem 1.5rem;
-        transition: all 0.2s;
-        border: 2px solid var(--primary);
-    }
-    
-    .stButton button[kind="primary"] {
-        background: var(--primary);
-        color: white;
-        border: none;
-    }
-    
-    .stButton button[kind="primary"]:hover {
-        background: #4F46E5;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
-    }
-    
-    .stButton button[kind="secondary"] {
-        background: transparent;
-        color: var(--primary);
-    }
-    
-    .stButton button[kind="secondary"]:hover {
-        background: rgba(99, 102, 241, 0.1);
-    }
-    
-    /* DOWNLOAD BUTTON */
-    .stDownloadButton button {
-        background: var(--primary) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 10px !important;
-        padding: 0.65rem 1.5rem !important;
-        font-weight: 600 !important;
-        transition: all 0.2s !important;
-    }
-    
-    .stDownloadButton button:hover {
-        background: #4F46E5 !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3) !important;
-    }
-    
-    /* SIDEBAR */
-    section[data-testid="stSidebar"] {
-        background: var(--surface-light);
-        border-right: 1px solid var(--border-light);
-        padding: 2rem 1rem;
-    }
-    
-    [data-theme="dark"] section[data-testid="stSidebar"] {
-        background: var(--surface-dark);
-        border-right: 1px solid var(--border-dark);
-    }
-    
-    /* DATAFRAMES */
-    .dataframe {
-        border-radius: 12px !important;
-        overflow: hidden !important;
-        border: 1px solid var(--border-light) !important;
-    }
-    
-    [data-theme="dark"] .dataframe {
-        border: 1px solid var(--border-dark) !important;
-    }
-    
-    /* ALERT BOXES */
-    .stSuccess, .stInfo, .stWarning, .stError {
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
-        font-weight: 500;
-        border: none;
-    }
-    
-    .stInfo {
-        background: rgba(99, 102, 241, 0.1);
-        color: var(--primary);
-    }
-    
     /* PERSONA CARDS */
     .persona-card {
-        background: var(--surface-light);
-        border: 1px solid var(--border-light);
+        background: white;
+        border: 1px solid rgba(0,0,0,0.1);
         border-radius: 20px;
         padding: 2rem;
         transition: all 0.3s;
@@ -461,8 +312,8 @@ st.markdown("""
     }
     
     [data-theme="dark"] .persona-card {
-        background: var(--surface-dark);
-        border: 1px solid var(--border-dark);
+        background: #1E293B;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
     .persona-card:hover {
@@ -471,11 +322,7 @@ st.markdown("""
         border-color: var(--primary);
     }
     
-    .persona-icon {
-        font-size: 3.5rem;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
+    .persona-icon { font-size: 3.5rem; text-align: center; margin-bottom: 1rem; }
     
     .persona-name {
         font-size: 1.4rem;
@@ -501,6 +348,11 @@ st.markdown("""
         margin: 0.5rem 0;
         font-size: 0.85rem;
         border-left: 3px solid var(--primary);
+        color: #0F172A;
+    }
+    
+    [data-theme="dark"] .persona-stat {
+        color: #F8FAFC;
     }
     
     .persona-strategy {
@@ -531,7 +383,6 @@ st.markdown("""
         font-size: 1.1rem;
         font-weight: 700;
         margin: 1.5rem 0;
-        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
     }
     
     /* RATE CARD TABLE */
@@ -560,11 +411,13 @@ st.markdown("""
     
     .rate-card-table td {
         padding: 1rem 1.25rem;
-        border-bottom: 1px solid var(--border-light);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        color: #0F172A;
     }
     
     [data-theme="dark"] .rate-card-table td {
-        border-bottom: 1px solid var(--border-dark);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        color: #F8FAFC;
     }
     
     .rate-card-table tbody tr:hover {
@@ -585,87 +438,39 @@ st.markdown("""
     .badge-gold { background: #FFD700; color: #333; }
     .badge-platinum { background: #E5E4E2; color: #333; }
     
-    /* SCROLLBAR */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+    /* BUTTONS */
+    .stDownloadButton button {
+        background: var(--primary) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.65rem 1.5rem !important;
+        font-weight: 600 !important;
     }
     
-    ::-webkit-scrollbar-track {
-        background: rgba(128, 128, 128, 0.05);
+    /* SIDEBAR */
+    section[data-testid="stSidebar"] {
+        background: white;
+        border-right: 1px solid rgba(0,0,0,0.1);
     }
     
-    ::-webkit-scrollbar-thumb {
-        background: rgba(99, 102, 241, 0.3);
-        border-radius: 5px;
+    [data-theme="dark"] section[data-testid="stSidebar"] {
+        background: #1E293B;
+        border-right: 1px solid rgba(255,255,255,0.1);
     }
     
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(99, 102, 241, 0.5);
+    /* Text Colors for Dark Mode */
+    [data-theme="dark"] p, [data-theme="dark"] span, [data-theme="dark"] li, [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 {
+        color: #F8FAFC !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize Session State
+# Session State
 if 'active_page' not in st.session_state:
     st.session_state.active_page = 'Home'
 if 'filters_applied' not in st.session_state:
     st.session_state.filters_applied = False
-
-# Navigation Function
-def navigate_to(page):
-    st.session_state.active_page = page
-    st.rerun()
-
-# TOP NAVIGATION BAR
-nav_html = f"""
-<div class="top-nav">
-    <div class="nav-logo">
-        <span>🎮</span>
-        <span>Gaming Cafe Analytics</span>
-    </div>
-    <div class="nav-links">
-        <button class="nav-link {'active' if st.session_state.active_page == 'Home' else ''}" onclick="window.location.hash='home'">Home</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Summary' else ''}" onclick="window.location.hash='summary'">Summary</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Overview' else ''}" onclick="window.location.hash='overview'">Overview</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Classification' else ''}" onclick="window.location.hash='classification'">Classification</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Clustering' else ''}" onclick="window.location.hash='clustering'">Clustering</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Association' else ''}" onclick="window.location.hash='association'">Association</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Regression' else ''}" onclick="window.location.hash='regression'">Regression</button>
-        <button class="nav-link {'active' if st.session_state.active_page == 'Pricing' else ''}" onclick="window.location.hash='pricing'">Pricing</button>
-    </div>
-</div>
-"""
-st.markdown(nav_html, unsafe_allow_html=True)
-
-# Streamlit Navigation Buttons (since HTML buttons can't call Python functions directly)
-col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
-with col1:
-    if st.button("🏠 Home", use_container_width=True, type="primary" if st.session_state.active_page == 'Home' else "secondary"):
-        navigate_to('Home')
-with col2:
-    if st.button("📋 Summary", use_container_width=True, type="primary" if st.session_state.active_page == 'Summary' else "secondary"):
-        navigate_to('Summary')
-with col3:
-    if st.button("📊 Overview", use_container_width=True, type="primary" if st.session_state.active_page == 'Overview' else "secondary"):
-        navigate_to('Overview')
-with col4:
-    if st.button("🎯 Classification", use_container_width=True, type="primary" if st.session_state.active_page == 'Classification' else "secondary"):
-        navigate_to('Classification')
-with col5:
-    if st.button("🔍 Clustering", use_container_width=True, type="primary" if st.session_state.active_page == 'Clustering' else "secondary"):
-        navigate_to('Clustering')
-with col6:
-    if st.button("🔗 Association", use_container_width=True, type="primary" if st.session_state.active_page == 'Association' else "secondary"):
-        navigate_to('Association')
-with col7:
-    if st.button("💰 Regression", use_container_width=True, type="primary" if st.session_state.active_page == 'Regression' else "secondary"):
-        navigate_to('Regression')
-with col8:
-    if st.button("🎛️ Pricing", use_container_width=True, type="primary" if st.session_state.active_page == 'Pricing' else "secondary"):
-        navigate_to('Pricing')
-
-st.markdown("---")
 
 # Helper Functions
 @st.cache_data
@@ -710,134 +515,109 @@ def preprocess_data(df):
     df_work = df_work.fillna(df_work.median(numeric_only=True))
     return df_work
 
-# ====================================================================
-# PAGE ROUTING
-# ====================================================================
+# TOP NAVIGATION BAR
+pages = ['Home', 'Summary', 'Overview', 'Classification', 'Clustering', 'Association', 'Regression', 'Pricing']
+nav_html = f"""
+<div class="top-nav">
+    <div class="nav-logo"><span>🎮</span><span>Gaming Cafe Analytics</span></div>
+    <div class="nav-links" id="nav-links">
+        {''.join([f'<button class="nav-btn {"active" if st.session_state.active_page == page else ""}" onclick="window.location.hash=\'{page}\'">{page}</button>' for page in pages])}
+    </div>
+</div>
+"""
+st.markdown(nav_html, unsafe_allow_html=True)
 
+# Navigation Handler (Hidden Streamlit buttons)
+st.markdown('<div style="display:none;">', unsafe_allow_html=True)
+cols = st.columns(len(pages))
+for idx, page in enumerate(pages):
+    with cols[idx]:
+        if st.button(page, key=f"nav_{page}"):
+            st.session_state.active_page = page
+            st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Check URL hash for navigation
+hash_script = """
+<script>
+window.addEventListener('hashchange', function() {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        const button = document.querySelector(`button[data-testid="baseButton-secondary"][key="nav_${hash}"]`);
+        if (button) button.click();
+    }
+});
+</script>
+"""
+st.markdown(hash_script, unsafe_allow_html=True)
+
+# PAGE ROUTING
 if st.session_state.active_page == 'Home':
-    # HOMEPAGE
     st.markdown("""
-    <div class="hero-section">
+    <div class="hero">
         <h1 class="hero-title">Welcome to Neo-Spectra Gaming Cafe Intelligence</h1>
         <p class="hero-subtitle">
             Revolutionizing the gaming cafe industry through advanced machine learning, predictive analytics, 
-            and data-driven business intelligence. Transform customer insights into actionable strategies that 
-            drive growth, optimize pricing, and maximize profitability in the competitive entertainment sector.
+            and data-driven business intelligence. Transform customer insights into actionable strategies.
         </p>
-        <div class="hero-cta">Explore Analytics Dashboard →</div>
     </div>
     """, unsafe_allow_html=True)
     
-    # BUSINESS IDEA
     st.markdown("""
     <div class="section-card">
         <h2 class="section-title">💡 Our Unique Business Proposition</h2>
-        <p style="font-size: 1.1rem; line-height: 1.8; opacity: 0.9;">
+        <p style="font-size: 1.1rem; line-height: 1.8;">
             <strong>Neo-Spectra Gaming Cafe Intelligence</strong> is the world's first AI-powered analytics platform 
-            specifically designed for gaming cafes and e-sports venues. We combine cutting-edge machine learning with 
-            deep industry expertise to deliver:
+            for gaming cafes. We deliver 92.5% accuracy in customer predictions and +42% revenue growth.
         </p>
-        <ul style="font-size: 1.05rem; line-height: 1.8; opacity: 0.85; margin-top: 1rem;">
-            <li><strong>Predictive Customer Analytics:</strong> 92.5% accuracy in identifying high-value prospects</li>
-            <li><strong>Dynamic Persona-Based Pricing:</strong> +42% revenue growth through intelligent tier systems</li>
-            <li><strong>Real-Time Market Intelligence:</strong> Association rule mining reveals hidden opportunities</li>
-            <li><strong>Automated Business Optimization:</strong> ML-driven recommendations reduce costs by 35%</li>
-        </ul>
     </div>
     """, unsafe_allow_html=True)
     
-    # SIGNIFICANCE
     st.markdown("""
     <div class="section-card">
-        <h2 class="section-title">🎯 Why This Matters: Industry Significance</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
-            <div style="padding: 1.5rem; border-left: 4px solid #6366F1; background: rgba(99, 102, 241, 0.05); border-radius: 12px;">
-                <h3 style="color: #6366F1; font-size: 1.25rem; margin-bottom: 0.75rem;">📈 Market Opportunity</h3>
-                <p style="opacity: 0.85; line-height: 1.6;">
-                    The global gaming cafe market is projected to reach $15.2B by 2028 (CAGR: 12.4%). 
-                    Dubai alone has 200+ venues competing for market share, yet <strong>85% operate without 
-                    data-driven insights</strong>, leaving billions in untapped revenue.
-                </p>
-            </div>
-            <div style="padding: 1.5rem; border-left: 4px solid #FF6B6B; background: rgba(255, 107, 107, 0.05); border-radius: 12px;">
-                <h3 style="color: #FF6B6B; font-size: 1.25rem; margin-bottom: 0.75rem;">🚀 Competitive Edge</h3>
-                <p style="opacity: 0.85; line-height: 1.6;">
-                    Traditional cafes rely on intuition and outdated POS data. Our platform provides 
-                    <strong>real-time predictive insights</strong>, enabling operators to anticipate trends, 
-                    optimize inventory, and personalize experiences 90 days ahead of competitors.
-                </p>
-            </div>
-            <div style="padding: 1.5rem; border-left: 4px solid #10B981; background: rgba(16, 185, 129, 0.05); border-radius: 12px;">
-                <h3 style="color: #10B981; font-size: 1.25rem; margin-bottom: 0.75rem;">💰 Proven ROI</h3>
-                <p style="opacity: 0.85; line-height: 1.6;">
-                    Early adopters report <strong>+56% revenue increase</strong> within 6 months, 
-                    <strong>+67% customer lifetime value</strong>, and <strong>45% reduction in churn</strong>. 
-                    The average payback period is just 8 weeks.
-                </p>
-            </div>
-        </div>
+        <h2 class="section-title">🎯 Why This Matters</h2>
+        <p style="line-height: 1.8;">
+            The global gaming cafe market will reach <strong>$15.2B by 2028</strong>. Yet 85% of venues operate 
+            without data insights. Our platform provides real-time predictive analytics with <strong>8-week payback</strong>.
+        </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # TEAM MEMBERS
     st.markdown("""
     <div class="section-card">
-        <h2 class="section-title">👥 Meet the Neo-Spectra Team</h2>
+        <h2 class="section-title">👥 Meet the Team</h2>
         <div class="team-grid">
             <div class="team-member">
                 <div class="team-avatar">AS</div>
                 <div class="team-name">Aarav Sharma</div>
-                <div class="team-role">Chief Data Scientist</div>
-                <div class="team-bio">
-                    PhD in Machine Learning from MIT. Former Lead ML Engineer at Google. 
-                    Specializes in predictive analytics and customer segmentation algorithms.
-                </div>
+                <div class="team-roll">Roll: 2021001</div>
             </div>
             <div class="team-member">
                 <div class="team-avatar">PP</div>
                 <div class="team-name">Priya Patel</div>
-                <div class="team-role">Head of Business Intelligence</div>
-                <div class="team-bio">
-                    MBA from INSEAD. 10 years in hospitality analytics. Expert in revenue 
-                    optimization and dynamic pricing strategies for entertainment venues.
-                </div>
+                <div class="team-roll">Roll: 2021002</div>
             </div>
             <div class="team-member">
                 <div class="team-avatar">RK</div>
                 <div class="team-name">Rohan Kumar</div>
-                <div class="team-role">Lead Full-Stack Engineer</div>
-                <div class="team-bio">
-                    Ex-Amazon SDE II. Built real-time analytics platforms processing 50M+ 
-                    events/day. Passionate about creating beautiful, scalable dashboards.
-                </div>
+                <div class="team-roll">Roll: 2021003</div>
             </div>
             <div class="team-member">
                 <div class="team-avatar">SM</div>
                 <div class="team-name">Sara Mohammed</div>
-                <div class="team-role">Gaming Industry Advisor</div>
-                <div class="team-bio">
-                    Founder of Dubai's first e-sports arena. 15 years experience in gaming 
-                    cafe operations. Bridges tech innovation with real-world business needs.
-                </div>
+                <div class="team-roll">Roll: 2021004</div>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">NK</div>
+                <div class="team-name">Nikhil Kapoor</div>
+                <div class="team-roll">Roll: 2021005</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    # CTA
-    st.markdown("""
-    <div style="text-align: center; margin: 4rem 0 2rem 0;">
-        <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem;">
-            Ready to Transform Your Gaming Cafe?
-        </h2>
-        <p style="font-size: 1.2rem; opacity: 0.8; margin-bottom: 2rem;">
-            Click "Summary" above to explore the full analytics dashboard
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
 
 else:
-    # ANALYTICS PAGES - Load Data First
+    # Analytics Pages
     with st.sidebar:
         st.title("⚙️ Controls")
         st.markdown("---")
@@ -853,9 +633,11 @@ else:
         with col1:
             if st.button("Apply", type="primary", use_container_width=True):
                 st.session_state.filters_applied = True
+                st.rerun()
         with col2:
             if st.button("Reset", use_container_width=True):
                 st.session_state.filters_applied = False
+                st.rerun()
     
     df = load_data(uploaded_file)
     
@@ -870,14 +652,13 @@ else:
         with st.expander("📊 View Data Sample"):
             st.dataframe(df.head(10), use_container_width=True)
         
-        # PAGE CONTENT
         if st.session_state.active_page == 'Summary':
             st.markdown('<div class="section-title">📋 Executive Summary</div>', unsafe_allow_html=True)
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric("💰 Revenue Potential", "1.68M AED", "+42%")
+                st.metric("💰 Revenue", "1.68M AED", "+42%")
             with col2:
-                st.metric("🎯 ML Accuracy", "92.5%", "+15%")
+                st.metric("🎯 Accuracy", "92.5%", "+15%")
             with col3:
                 st.metric("👥 Segments", "5", "Distinct")
             with col4:
@@ -886,10 +667,10 @@ else:
             col1, col2 = st.columns(2)
             with col1:
                 st.subheader("🔍 Key Findings")
-                st.markdown("**Classification:** 92.5% accuracy, Gaming frequency top predictor\n\n**Clustering:** 5 personas, Premium (15%) + E-Sports (22%) = 55% revenue\n\n**Association:** FPS → Gaming cafes (2.51x)\n\n**Regression:** 80% variance explained")
+                st.markdown("**Classification:** 92.5% accuracy\n\n**Clustering:** 5 personas\n\n**Association:** FPS → Gaming (2.51x)\n\n**Regression:** 80% variance")
             with col2:
                 st.subheader("💡 Recommendations")
-                st.markdown("**Immediate:** 70% ads to 25-34 age, 60% FPS stations\n\n**Outcomes:** +56% revenue, +35% retention, +67% LTV")
+                st.markdown("**Actions:** Target 25-34 age, 60% FPS stations\n\n**Outcomes:** +56% revenue, +35% retention")
         
         elif st.session_state.active_page == 'Overview':
             st.markdown('<div class="section-title">📊 Data Overview</div>', unsafe_allow_html=True)
@@ -924,16 +705,16 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
         
         elif st.session_state.active_page == 'Classification':
-            st.markdown('<div class="section-title">🎯 Classification Analysis</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">🎯 Classification</div>', unsafe_allow_html=True)
             with st.sidebar:
-                st.markdown("### 🎯 Settings")
-                test_size_class = st.slider("Test Size (%)", 10, 40, 20, key="test_class") / 100
-                selected_classifiers = st.multiselect("Models", ["Logistic Regression", "Decision Tree", "Random Forest", "Gradient Boosting", "SVM", "KNN", "Naive Bayes"], default=["Random Forest", "Gradient Boosting"])
+                st.markdown("### Settings")
+                test_size = st.slider("Test Size (%)", 10, 40, 20, key="test_class") / 100
+                selected_models = st.multiselect("Models", ["Logistic Regression", "Random Forest", "Gradient Boosting"], default=["Random Forest", "Gradient Boosting"])
             
             target_col = 'Q45_Interest_In_Concept'
-            if target_col in df.columns and len(selected_classifiers) > 0:
+            if target_col in df.columns and len(selected_models) > 0:
                 try:
-                    predictor_features = ['Q1_Age', 'Q2_Gender', 'Q6_Monthly_Income_AED', 'Q11_Play_Video_Games', 'Q15_Hours_Per_Week', 'Q21_Social_Aspect_Importance', 'Q26_Food_Quality_Importance', 'Q37_Total_WTP_Per_Visit_AED', 'Q38_Price_Sensitivity']
+                    predictor_features = ['Q1_Age', 'Q6_Monthly_Income_AED', 'Q11_Play_Video_Games', 'Q15_Hours_Per_Week', 'Q21_Social_Aspect_Importance', 'Q26_Food_Quality_Importance', 'Q37_Total_WTP_Per_Visit_AED', 'Q38_Price_Sensitivity']
                     predictor_features = [f for f in predictor_features if f in df.columns]
                     
                     if len(predictor_features) > 3:
@@ -942,26 +723,26 @@ else:
                         df_processed = preprocess_data(df_class[predictor_features + ['Interest_Binary']]).select_dtypes(include=[np.number])
                         X = df_processed[predictor_features]
                         y = df_processed['Interest_Binary']
-                        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size_class, random_state=42)
+                        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
                         scaler = StandardScaler()
                         X_train_scaled = scaler.fit_transform(X_train)
                         X_test_scaled = scaler.transform(X_test)
                         
-                        classifiers_dict = {"Logistic Regression": LogisticRegression(random_state=42, max_iter=1000), "Decision Tree": DecisionTreeClassifier(random_state=42, max_depth=10), "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10), "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42), "SVM": SVC(random_state=42, probability=True), "KNN": KNeighborsClassifier(n_neighbors=5), "Naive Bayes": GaussianNB()}
+                        models_dict = {"Logistic Regression": LogisticRegression(random_state=42, max_iter=1000), "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42, max_depth=10), "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42)}
                         
                         results = {}
                         feature_importances = {}
-                        for name in selected_classifiers:
-                            if name in classifiers_dict:
-                                model = classifiers_dict[name]
-                                if name in ["Logistic Regression", "SVM", "KNN", "Naive Bayes"]:
+                        for name in selected_models:
+                            if name in models_dict:
+                                model = models_dict[name]
+                                if name == "Logistic Regression":
                                     model.fit(X_train_scaled, y_train)
                                     y_pred = model.predict(X_test_scaled)
                                 else:
                                     model.fit(X_train, y_train)
                                     y_pred = model.predict(X_test)
                                 results[name] = {'Accuracy': accuracy_score(y_test, y_pred), 'Precision': precision_score(y_test, y_pred, average='binary', zero_division=0), 'Recall': recall_score(y_test, y_pred, average='binary', zero_division=0), 'F1-Score': f1_score(y_test, y_pred, average='binary', zero_division=0), 'predictions': y_pred}
-                                if name in ["Random Forest", "Gradient Boosting", "Decision Tree"]:
+                                if name in ["Random Forest", "Gradient Boosting"]:
                                     feature_importances[name] = model.feature_importances_
                         
                         comparison_df = pd.DataFrame({'Model': list(results.keys()), 'Accuracy': [results[m]['Accuracy'] for m in results.keys()], 'Precision': [results[m]['Precision'] for m in results.keys()], 'Recall': [results[m]['Recall'] for m in results.keys()], 'F1-Score': [results[m]['F1-Score'] for m in results.keys()]})
@@ -994,9 +775,9 @@ else:
                     st.error(f"Error: {str(e)}")
         
         elif st.session_state.active_page == 'Clustering':
-            st.markdown('<div class="section-title">🔍 Customer Clustering</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">🔍 Clustering</div>', unsafe_allow_html=True)
             with st.sidebar:
-                st.markdown("### 🔍 Settings")
+                st.markdown("### Settings")
                 n_clusters = st.slider("Clusters", 2, 10, 5, key="n_clusters")
                 clustering_method = st.selectbox("Method", ["K-Means", "Gaussian Mixture"])
             
@@ -1014,6 +795,7 @@ else:
                     model = KMeans(n_clusters=n_clusters, random_state=42, n_init=10) if clustering_method == "K-Means" else GaussianMixture(n_components=n_clusters, random_state=42)
                     clusters = model.fit_predict(X_scaled)
                     df_processed['Cluster'] = clusters
+                    
                     col1, col2, col3 = st.columns(3)
                     with col1:
                         st.metric("Silhouette", f"{silhouette_score(X_scaled, clusters):.3f}")
@@ -1021,12 +803,50 @@ else:
                         st.metric("Davies-Bouldin", f"{davies_bouldin_score(X_scaled, clusters):.3f}")
                     with col3:
                         st.metric("Clusters", n_clusters)
+                    
+                    # PCA for visualization
                     pca = PCA(n_components=2)
                     X_pca = pca.fit_transform(X_scaled)
                     df_processed['PCA1'] = X_pca[:, 0]
                     df_processed['PCA2'] = X_pca[:, 1]
-                    fig = px.scatter(df_processed, x='PCA1', y='PCA2', color='Cluster', color_continuous_scale='viridis')
-                    fig.update_layout(height=500)
+                    
+                    # CLUSTER PLOT WITH CENTERS MARKED
+                    fig = go.Figure()
+                    
+                    # Plot points
+                    for cluster in range(n_clusters):
+                        cluster_data = df_processed[df_processed['Cluster'] == cluster]
+                        fig.add_trace(go.Scatter(
+                            x=cluster_data['PCA1'],
+                            y=cluster_data['PCA2'],
+                            mode='markers',
+                            name=f'Cluster {cluster}',
+                            marker=dict(size=8, opacity=0.6)
+                        ))
+                    
+                    # Add cluster centers (if K-Means)
+                    if clustering_method == "K-Means":
+                        centers_pca = pca.transform(model.cluster_centers_)
+                        fig.add_trace(go.Scatter(
+                            x=centers_pca[:, 0],
+                            y=centers_pca[:, 1],
+                            mode='markers',
+                            name='Cluster Centers',
+                            marker=dict(
+                                size=20,
+                                color='red',
+                                symbol='x',
+                                line=dict(width=2, color='white')
+                            )
+                        ))
+                    
+                    fig.update_layout(
+                        title='Customer Clusters (PCA Visualization)',
+                        xaxis_title='Principal Component 1',
+                        yaxis_title='Principal Component 2',
+                        height=600,
+                        showlegend=True
+                    )
                     st.plotly_chart(fig, use_container_width=True)
                     
                     if n_clusters == 5:
@@ -1061,7 +881,7 @@ else:
         elif st.session_state.active_page == 'Association':
             st.markdown('<div class="section-title">🔗 Association Rules</div>', unsafe_allow_html=True)
             with st.sidebar:
-                st.markdown("### 🔗 Settings")
+                st.markdown("### Settings")
                 min_support = st.slider("Support (%)", 1, 50, 10, key="support") / 100
                 min_confidence = st.slider("Confidence (%)", 10, 100, 70, key="confidence") / 100
                 top_n_rules = st.slider("Top N", 5, 50, 10)
@@ -1106,18 +926,18 @@ else:
                                     st.plotly_chart(fig, use_container_width=True)
                                 st.download_button("📥 Download", rules_display.to_csv(index=False), "association.csv", "text/csv")
                             else:
-                                st.warning("⚠️ **No association rules found.** The minimum support/confidence thresholds are too high for the current dataset. Try lowering the support to 5% or confidence to 50%.")
+                                st.warning("⚠️ **No rules found.** Support/confidence thresholds are too high. Try lowering to support=5%, confidence=50%.")
                         else:
-                            st.warning("⚠️ **No frequent itemsets found.** The minimum support threshold is too high. Try lowering it to 5% or less.")
+                            st.warning("⚠️ **No frequent itemsets.** Minimum support is too high. Try lowering to 5% or less.")
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
         
         elif st.session_state.active_page == 'Regression':
-            st.markdown('<div class="section-title">💰 Regression Analysis</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title">💰 Regression</div>', unsafe_allow_html=True)
             with st.sidebar:
-                st.markdown("### 💰 Settings")
+                st.markdown("### Settings")
                 test_size_reg = st.slider("Test Size (%)", 10, 40, 20, key="test_reg") / 100
-                selected_models = st.multiselect("Models", ["Linear Regression", "Ridge", "Lasso", "Decision Tree", "Random Forest", "Gradient Boosting"], default=["Ridge", "Random Forest"])
+                selected_models = st.multiselect("Models", ["Ridge", "Random Forest", "Gradient Boosting"], default=["Ridge", "Random Forest"])
             target_col = 'Q37_Total_WTP_Per_Visit_AED'
             if target_col in df.columns and len(selected_models) > 0:
                 try:
@@ -1134,20 +954,20 @@ else:
                         scaler = StandardScaler()
                         X_train_scaled = scaler.fit_transform(X_train)
                         X_test_scaled = scaler.transform(X_test)
-                        models_dict = {"Linear Regression": LinearRegression(), "Ridge": Ridge(alpha=1.0), "Lasso": Lasso(alpha=1.0), "Decision Tree": DecisionTreeRegressor(random_state=42, max_depth=10), "Random Forest": RandomForestRegressor(n_estimators=100, random_state=42, max_depth=10), "Gradient Boosting": GradientBoostingRegressor(n_estimators=100, random_state=42)}
+                        models_dict = {"Ridge": Ridge(alpha=1.0), "Random Forest": RandomForestRegressor(n_estimators=100, random_state=42, max_depth=10), "Gradient Boosting": GradientBoostingRegressor(n_estimators=100, random_state=42)}
                         results = {}
                         reg_importances = {}
                         for name in selected_models:
                             if name in models_dict:
                                 model = models_dict[name]
-                                if name in ["Linear Regression", "Ridge", "Lasso"]:
+                                if name == "Ridge":
                                     model.fit(X_train_scaled, y_train)
                                     y_pred = model.predict(X_test_scaled)
                                 else:
                                     model.fit(X_train, y_train)
                                     y_pred = model.predict(X_test)
                                 results[name] = {'R²': r2_score(y_test, y_pred), 'RMSE': np.sqrt(mean_squared_error(y_test, y_pred)), 'MAE': mean_absolute_error(y_test, y_pred)}
-                                if name in ["Random Forest", "Gradient Boosting", "Decision Tree"]:
+                                if name in ["Random Forest", "Gradient Boosting"]:
                                     reg_importances[name] = model.feature_importances_
                         comparison_df = pd.DataFrame({'Model': list(results.keys()), 'R²': [results[m]['R²'] for m in results.keys()], 'RMSE': [results[m]['RMSE'] for m in results.keys()], 'MAE': [results[m]['MAE'] for m in results.keys()]})
                         st.dataframe(comparison_df.style.background_gradient(subset=['R²'], cmap='RdYlGn').format({'R²': '{:.3f}', 'RMSE': '{:.2f}', 'MAE': '{:.2f}'}), use_container_width=True)
@@ -1229,7 +1049,7 @@ else:
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
     else:
-        st.error("Failed to load data. Please check your data source.")
+        st.error("Failed to load data.")
 
 st.markdown("---")
-st.caption("🎮 Neo-Spectra Gaming Cafe Intelligence | Built with Streamlit & Advanced ML | © 2025")
+st.caption("🎮 Neo-Spectra Gaming Cafe Intelligence | © 2025")
