@@ -109,9 +109,21 @@ st.markdown("""
         border-right: none;
     }
     
-    section[data-testid="stSidebar"] * {
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] .stMarkdown,
+    section[data-testid="stSidebar"] label {
         color: white !important;
     }
+
+    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"],
+    section[data-testid="stSidebar"] .stSelectbox,
+    section[data-testid="stSidebar"] input {
+        background: white !important;
+        color: #6366F1 !important;
+    }
+
     
     section[data-testid="stSidebar"] h1 {
         font-size: 1.5rem;
