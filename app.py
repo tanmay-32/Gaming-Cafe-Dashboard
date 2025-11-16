@@ -1049,16 +1049,22 @@ if df is not None:
         if all(col in df.columns for col in required_cols):
             try:
                 df_price = preprocess_data(df[required_cols].copy()).select_dtypes(include=[np.number])
+                # Normalize each component to 0-100 scale first
+                visits_norm = (df_price[required_cols[0]] / df_price[required_cols[0]].max()) * 100
+                frequency_norm = (df_price[required_cols[1]] / df_price[required_cols[1]].max()) * 100
+                interest_norm = (df_price[required_cols[2]] / df_price[required_cols[2]].max()) * 100
+
+                # Weighted average
                 df_price['Loyalty_Score'] = (
-                    df_price[required_cols[0]] * 30 + 
-                    df_price[required_cols[1]] * 25 + 
-                    df_price[required_cols[2]] * 20
+                    visits_norm * 0.40 +      # 40% weight
+                    frequency_norm * 0.35 +    # 35% weight
+                    interest_norm * 0.25       # 25% weight
                 ).clip(0, 100)
-                
+
                 df_price['Loyalty_Tier'] = pd.cut(
-                    df_price['Loyalty_Score'], 
-                    bins=[0, sim_bronze_threshold, 60, 80, 100], 
-                    labels=['Bronze', 'Silver', 'Gold', 'Platinum']
+                df_price['Loyalty_Score'], 
+                bins=[0, 25, 50, 75, 100], 
+                labels=['Bronze', 'Silver', 'Gold', 'Platinum']
                 )
                 
                 df_price['Loyalty_Discount'] = (df_price['Loyalty_Score'] / 100) * sim_max_discount
