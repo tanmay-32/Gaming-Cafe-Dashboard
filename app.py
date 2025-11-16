@@ -120,7 +120,7 @@ st.markdown("""
     section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"],
     section[data-testid="stSidebar"] .stSelectbox,
     section[data-testid="stSidebar"] input {
-        background: white !important;
+        background: black !important;
         color: #ffffff !important;
     }
 
