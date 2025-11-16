@@ -37,7 +37,7 @@ def get_chatbot_response(question, data_context):
     """Google Gemini AI chatbot - FREE and powerful"""
     try:
         # Configure Gemini
-        genai.configure(api_key=st.secrets.get("GEMINI_API_KEY", ""))
+        genai.configure(api_key="AIzaSyAM1gaIlXX8EOQtbGG0N8nh1ksin-unGLc")
         model = genai.GenerativeModel('gemini-pro')
         
         # Build context-aware prompt
