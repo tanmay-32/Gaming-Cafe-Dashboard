@@ -114,7 +114,7 @@ st.markdown("""
     section[data-testid="stSidebar"] h3,
     section[data-testid="stSidebar"] .stMarkdown,
     section[data-testid="stSidebar"] label {
-        color: black !important;
+        color: white !important;
     }
 
     section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"],
