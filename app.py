@@ -1251,141 +1251,141 @@ if df is not None:
 else:
     st.error("❌ Failed to load data. Please check your data source or upload a valid CSV file.")
 
-st.markdown("---")
-st.caption("🎮 Neo-Spectra Gaming Cafe Intelligence | Built with Advanced ML & Modern Design | © 2025")
-
-    with tab8:
-        st.markdown('<div class="section-title">🤖 AI Cafe Consultant (Powered by Google Gemini)</div>', unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="section-card">
-            <h3 style="color: #6366F1;">💬 Ask me anything about your gaming cafe strategy!</h3>
-            <p>I'm powered by Google's Gemini AI and trained on your survey data, ML models, and industry insights. 
-            I can help you make data-driven decisions about pricing, targeting, games, and growth strategies.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Initialize chat history
-        if 'chat_history' not in st.session_state:
-            st.session_state.chat_history = []
-        
-        # User Input Area
-        st.markdown("### 💭 Ask Your Question")
-        user_question = st.text_area(
-            "Type your question here...",
-            placeholder="Example: Which persona should I target first for maximum ROI?",
-            height=100,
-            key="chatbot_input"
-        )
-        
-        col1, col2, col3 = st.columns([2, 1, 1])
-        with col1:
-            ask_button = st.button("🚀 Ask Gemini AI", type="primary", use_container_width=True)
-        with col2:
-            if st.session_state.chat_history:
-                if st.button("🗑️ Clear Chat", use_container_width=True):
-                    st.session_state.chat_history = []
-                    st.rerun()
-        
-        # Suggested Questions
-        st.markdown("### 💡 Suggested Questions (Click to Ask)")
-        
-        suggestions = [
-            "Which persona should I target first for maximum ROI?",
-            "What's the optimal pricing strategy for my loyalty program?",
-            "Why is the Casual Social segment profitable?",
-            "How can I increase revenue by 50% in 6 months?",
-            "What games should I prioritize based on the data?",
-            "Should I focus more on students or professionals?",
-            "What's the best location in Dubai for my gaming cafe?",
-            "How do I compete with existing gaming cafes?",
-            "What marketing channels should I invest in?"
-        ]
-        
-        cols = st.columns(3)
-        for i, suggestion in enumerate(suggestions):
-            with cols[i % 3]:
-                if st.button(suggestion, key=f"suggestion_{i}", use_container_width=True):
-                    user_question = suggestion
-                    ask_button = True
-        
-        # Process Question
-        if ask_button and user_question:
-            with st.spinner("🤔 Gemini AI is analyzing your question..."):
-                data_context = {
-                    'customers': len(df) if df is not None else 600,
-                    'accuracy': 92.5,
-                    'revenue': 1.68
-                }
-                
-                response = get_chatbot_response(user_question, data_context)
-                
-                # Add to history (most recent first)
-                st.session_state.chat_history.insert(0, {
-                    'question': user_question,
-                    'answer': response
-                })
-                
-                st.rerun()
-        
-        # Display Chat History
+with tab8:
+    st.markdown('<div class="section-title">🤖 AI Cafe Consultant (Powered by Google Gemini)</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="section-card">
+        <h3 style="color: #6366F1;">💬 Ask me anything about your gaming cafe strategy!</h3>
+        <p>I'm powered by Google's Gemini AI and trained on your survey data, ML models, and industry insights. 
+        I can help you make data-driven decisions about pricing, targeting, games, and growth strategies.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Initialize chat history
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+    
+    # User Input Area
+    st.markdown("### 💭 Ask Your Question")
+    user_question = st.text_area(
+        "Type your question here...",
+        placeholder="Example: Which persona should I target first for maximum ROI?",
+        height=100,
+        key="chatbot_input"
+    )
+    
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        ask_button = st.button("🚀 Ask Gemini AI", type="primary", use_container_width=True)
+    with col2:
         if st.session_state.chat_history:
-            st.markdown("---")
-            st.markdown("### 💬 Conversation History")
+            if st.button("🗑️ Clear Chat", use_container_width=True):
+                st.session_state.chat_history = []
+                st.rerun()
+    
+    # Suggested Questions
+    st.markdown("### 💡 Suggested Questions (Click to Ask)")
+    
+    suggestions = [
+        "Which persona should I target first for maximum ROI?",
+        "What's the optimal pricing strategy for my loyalty program?",
+        "Why is the Casual Social segment profitable?",
+        "How can I increase revenue by 50% in 6 months?",
+        "What games should I prioritize based on the data?",
+        "Should I focus more on students or professionals?",
+        "What's the best location in Dubai for my gaming cafe?",
+        "How do I compete with existing gaming cafes?",
+        "What marketing channels should I invest in?"
+    ]
+    
+    cols = st.columns(3)
+    for i, suggestion in enumerate(suggestions):
+        with cols[i % 3]:
+            if st.button(suggestion, key=f"suggestion_{i}", use_container_width=True):
+                user_question = suggestion
+                ask_button = True
+    
+    # Process Question
+    if ask_button and user_question:
+        with st.spinner("🤔 Gemini AI is analyzing your question..."):
+            data_context = {
+                'customers': len(df) if df is not None else 600,
+                'accuracy': 92.5,
+                'revenue': 1.68
+            }
             
-            for i, chat in enumerate(st.session_state.chat_history):
-                # User question bubble
-                st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); 
-                            color: white; 
-                            padding: 1.25rem 1.5rem; 
-                            margin: 1rem 0 0.5rem 0; 
-                            border-radius: 18px 18px 18px 2px;
-                            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
-                    <strong>You asked:</strong><br><br>
-                    {chat['question']}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # AI response bubble
-                st.markdown(f"""
-                <div style="background: white; 
-                            border: 2px solid #E2E8F0;
-                            padding: 1.25rem 1.5rem; 
-                            margin: 0 0 2rem 0; 
-                            border-radius: 18px 18px 2px 18px;
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                        <strong style="color: #10B981; font-size: 1.1rem;">🤖 Gemini AI Consultant</strong>
-                        <span style="background: #10B981; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600;">POWERED BY GOOGLE</span>
-                    </div>
-                    {chat['answer']}
-                </div>
-                """, unsafe_allow_html=True)
-        else:
-            # Empty state
-            st.markdown("""
-            <div style="text-align: center; padding: 3rem 1rem; background: #F8FAFC; border-radius: 16px; margin: 2rem 0;">
-                <h2 style="color: #6366F1; font-size: 2rem; margin-bottom: 1rem;">👋 Ready to Help!</h2>
-                <p style="font-size: 1.1rem; color: #64748B; margin-bottom: 2rem;">
-                    Ask me anything about your gaming cafe business strategy.<br>
-                    I have access to all your survey data and ML model insights.
-                </p>
-                <p style="font-size: 0.9rem; color: #94A3B8;">
-                    💡 Try one of the suggested questions above or type your own!
-                </p>
+            response = get_chatbot_response(user_question, data_context)
+            
+            # Add to history (most recent first)
+            st.session_state.chat_history.insert(0, {
+                'question': user_question,
+                'answer': response
+            })
+            
+            st.rerun()
+    
+    # Display Chat History
+    if st.session_state.chat_history:
+        st.markdown("---")
+        st.markdown("### 💬 Conversation History")
+        
+        for i, chat in enumerate(st.session_state.chat_history):
+            # User question bubble
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); 
+                        color: white; 
+                        padding: 1.25rem 1.5rem; 
+                        margin: 1rem 0 0.5rem 0; 
+                        border-radius: 18px 18px 18px 2px;
+                        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                <strong>You asked:</strong><br><br>
+                {chat['question']}
             </div>
             """, unsafe_allow_html=True)
-        
-        # Footer
+            
+            # AI response bubble
+            st.markdown(f"""
+            <div style="background: white; 
+                        border: 2px solid #E2E8F0;
+                        padding: 1.25rem 1.5rem; 
+                        margin: 0 0 2rem 0; 
+                        border-radius: 18px 18px 2px 18px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                    <strong style="color: #10B981; font-size: 1.1rem;">🤖 Gemini AI Consultant</strong>
+                    <span style="background: #10B981; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600;">POWERED BY GOOGLE</span>
+                </div>
+                {chat['answer']}
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        # Empty state
         st.markdown("""
-        ---
-        <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%); border-radius: 12px;">
-            <p style="margin: 0; font-size: 0.85rem; color: #64748B;">
-                <strong>🔒 Privacy:</strong> Your conversations are private and not stored permanently<br>
-                <strong>⚡ Speed:</strong> Responses typically take 2-3 seconds<br>
-                <strong>🎯 Accuracy:</strong> Trained on your specific survey data and ML results<br>
-                <strong>💯 Free:</strong> 60 requests per minute (more than enough for demos!)
+        <div style="text-align: center; padding: 3rem 1rem; background: #F8FAFC; border-radius: 16px; margin: 2rem 0;">
+            <h2 style="color: #6366F1; font-size: 2rem; margin-bottom: 1rem;">👋 Ready to Help!</h2>
+            <p style="font-size: 1.1rem; color: #64748B; margin-bottom: 2rem;">
+                Ask me anything about your gaming cafe business strategy.<br>
+                I have access to all your survey data and ML model insights.
+            </p>
+            <p style="font-size: 0.9rem; color: #94A3B8;">
+                💡 Try one of the suggested questions above or type your own!
             </p>
         </div>
         """, unsafe_allow_html=True)
+    
+    # Footer
+    st.markdown("""
+    ---
+    <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%); border-radius: 12px;">
+        <p style="margin: 0; font-size: 0.85rem; color: #64748B;">
+            <strong>🔒 Privacy:</strong> Your conversations are private and not stored permanently<br>
+            <strong>⚡ Speed:</strong> Responses typically take 2-3 seconds<br>
+            <strong>🎯 Accuracy:</strong> Trained on your specific survey data and ML results<br>
+            <strong>💯 Free:</strong> 60 requests per minute (more than enough for demos!)
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("---")
+st.caption("🎮 Neo-Spectra Gaming Cafe Intelligence | Built with Advanced ML & Modern Design | © 2025")
