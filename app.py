@@ -114,13 +114,13 @@ st.markdown("""
     section[data-testid="stSidebar"] h3,
     section[data-testid="stSidebar"] .stMarkdown,
     section[data-testid="stSidebar"] label {
-        color: white !important;
+        color: grey !important;
     }
 
     section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"],
     section[data-testid="stSidebar"] .stSelectbox,
     section[data-testid="stSidebar"] input {
-        background: white !important;
+        background: grey !important;
         color: #6366F1 !important;
     }
 
