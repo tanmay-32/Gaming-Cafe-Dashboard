@@ -589,7 +589,7 @@ if df is not None:
         st.dataframe(df.head(10), use_container_width=True)
     
     # TABS - WORKING NAVIGATION
-    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "🏠 Home",
         "📋 Summary", 
         "📊 Overview", 
@@ -598,7 +598,6 @@ if df is not None:
         "🔗 Association", 
         "💰 Regression", 
         "🎛️ Pricing",
-        "🤖 AI Consultant"
     ])
     
     with tab0:
